@@ -27,7 +27,7 @@
 (define (interp-script [progs : (Listof Sexp)]) : Void
   (fprintf (current-output-port) (string-join (map interp (map parse progs)) "~n")))
 
-
+;get a python string
 (define (interp [e : ExprC]) : String
   (match e
     [(numC n) (number->string n)]
