@@ -6,7 +6,7 @@ For assignment 2, I started with the basic format and structures from my assignm
 The critical functions in my assignment are parse and interp. Parse takes a S expression and tries to match it to one of the structs I have defined to match our LC language 
 grammar, or throws an error if it is unable to figure out which one. The output from parse is fed directly into interp, which converts it to a viable python string, also using 
 match. In terms of implementing the LC language, it was the largely trivial task of making sure the grammar was correct, and that a few more complex programs still came out ok. 
-Probably the biggest question I faced was how to handle applications of functions, as within lambda functions it can be a little tricky t wrap your head around. I was tempted to 
+Probably the biggest question I faced was how to handle applications of functions, as with lambda functions it can be a little tricky t wrap your head around. I was tempted to 
 demand a lamC when parsing for an application, but was able to leave it open so someone could have a more complex program that returns a lambda at some point in the function 
 application spot. Another issue was if statements, although I ultimately just made it spit out one line if statements, although that feels kind of lame.
 
