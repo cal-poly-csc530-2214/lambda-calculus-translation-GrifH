@@ -34,7 +34,7 @@
     [(numC n) (number->string n)]
     [(id sym) (symbol->string sym)]
     [(binop s l r) (string-append "(" (interp l) (symbol->string s) (interp r) ")")]
-    [(ifleq0 if then else) (string-append "(" (interp then) " if " (interp if) " == 0 else " (interp else) ")")]
+    [(ifleq0 if then else) (string-append "(" (interp then) " if " (interp if) " <= 0 else " (interp else) ")")]
     [(AppC f a) (string-append (interp f) "(" (interp a) ")")]
     [(LamC p b) (string-append "(lambda " (interp p) " : " (interp b) ")")]
     [(assignC label body) (string-append (interp label) " = " (interp body))]
