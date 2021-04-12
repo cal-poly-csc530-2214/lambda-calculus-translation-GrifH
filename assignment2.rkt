@@ -58,7 +58,7 @@
 (check-equal? (top-interp '(+ 5 2)) "(5+2)")
 (check-equal? (top-interp '((/ x => (* 5 (+ x 2))) 4)) "(lambda x : (5*(x+2)))(4)")
 (check-equal? (top-interp '((/ x => (* 5 (+ x 2))) 4)) "(lambda x : (5*(x+2)))(4)")
-(check-equal? (top-interp '((/ x => (ifleq0 x 1 0)) 1)) "(lambda x : (1 if x == 0 else 0))(1)")
+(check-equal? (top-interp '((/ x => (ifleq0 x 1 0)) 1)) "(lambda x : (1 if x <= 0 else 0))(1)")
 (check-equal? (top-interp '(println (+ 5 3))) "(println((5+3)))")
 
 ;interp-script
