@@ -3,7 +3,7 @@
 ;; Types and Structs
 
 ;ExprC represents an operation the can produce a Real
-(define-type ExprC (U numC binop AppC ifleq0 id LamC assignC))
+(define-type ExprC (U numC binop AppC ifleq0 id LamC assignC printC))
 (struct numC ([n : Real]) #:transparent)
 (struct binop ([op : Symbol] [l : ExprC] [r : ExprC]) #:transparent)
 (struct ifleq0 ([if : ExprC] [then : ExprC] [else : ExprC]) #:transparent)
@@ -11,6 +11,7 @@
 (struct LamC ([param : id] [body : ExprC]) #:transparent)
 (struct AppC ([func : ExprC] [arg : ExprC]) #:transparent)
 (struct assignC ([label : id] [body : ExprC]) #:transparent)
+(struct printC ([arg : ExprC]) #:transparent)
 
 ;predicates for helping with parse
 (define isop? (lambda (s) (or (eq? s '+) (eq? s '-) (eq? s '*) (eq? s '/))))
@@ -36,13 +37,15 @@
     [(ifleq0 if then else) (string-append "(" (interp then) " if " (interp if) " == 0 else " (interp else) ")")]
     [(AppC f a) (string-append (interp f) "(" (interp a) ")")]
     [(LamC p b) (string-append "(lambda " (interp p) " : " (interp b) ")")]
-    [(assignC label body) (string-append (interp label) " = " (interp body))]))
+    [(assignC label body) (string-append (interp label) " = " (interp body))]
+    [(printC arg) (string-append "(println(" (interp arg) "))" )]))
 
 ;parse takes an s-expression and attempts to convert it to an ExprC
 (define (parse [s : Sexp]) : ExprC
   (match s
     [(? notkeyword? s) (id s)]
     [(? real? r) (numC r)]
+    [(list 'println e) (printC (parse e))]
     [(list '/ (? notkeyword? p) '=> body) (LamC (id p) (parse body))]
     [(list 'ifleq0 if then else) (ifleq0 (parse if) (parse then) (parse else))]
     [(list (? isop? s) l r) (binop s (parse l) (parse r))]
@@ -56,6 +59,7 @@
 (check-equal? (top-interp '((/ x => (* 5 (+ x 2))) 4)) "(lambda x : (5*(x+2)))(4)")
 (check-equal? (top-interp '((/ x => (* 5 (+ x 2))) 4)) "(lambda x : (5*(x+2)))(4)")
 (check-equal? (top-interp '((/ x => (ifleq0 x 1 0)) 1)) "(lambda x : (1 if x == 0 else 0))(1)")
+(check-equal? (top-interp '(println (+ 5 3))) "(println((5+3)))")
 
 ;interp-script
 (check-equal? (interp-script (list '(= a (+ 5 2)) '(* a 3) '(ifleq0 1 2 3) '(= f (/ x => (* 5 (+ x 2)))) '(f 4))) (void))
